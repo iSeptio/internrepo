@@ -15,8 +15,7 @@ Rows are sorted lexicographically by date followed by the country code. '''
 import csv, sys, pycountry, datetime
 from collections import defaultdict, Counter
 
-#example of Country(alpha_2='PL', alpha_3='POL', name='Poland', numeric='616', official_name='Republic of Poland')
-#pycountry.countries
+
 
 def inWhichCountryIsRegion(check_region):
     for region in list(pycountry.subdivisions):
@@ -47,11 +46,9 @@ def read_data():
                 data.append(row) 
                     
         except csv.Error as e:
-            sys.exit('file {}, line {}: {}'.format("idontunderstand", csv_reader.line_num, e)) 
-
+            sys.exit('file {}, line {}: {}'.format("idontunderstand", csv_reader.line_num, e)) #to be done
 
 read_data()
-
 
 for instance in data:
     instance[0]= changeDateFormat(instance[0]) 
@@ -66,12 +63,15 @@ new_data = sorted(data, key = lambda x: (x[0],x[1]))
 
 counter = Counter()
 counter2 = Counter()
+
 for date, country_code, impression, CTI in new_data:
     counter[(date, country_code)] += impression
     counter2[(date,country_code)] += CTI
 
 outputdata = [[date, country_code, impression] for (date,country_code), impression in counter.items()]
+
 extra_data = [[date, country_code, CTI] for (date, country_code), CTI in counter2.items()]
+
 for i in range(len(outputdata)):
     outputdata[i].append(extra_data[i][2])
 
@@ -82,7 +82,4 @@ with open('output.csv', mode='w') as writer:
         writer.writerow(row)
 
 
-
-#for region in pycountry.subdivisions.get(country_code='CZ'):
-    
 #sys.stderr.write("An error has occured!") or sys.exit("Error!")
